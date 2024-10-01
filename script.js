@@ -1,47 +1,35 @@
-const fileListElement = document.getElementById('file-list');
-const currentPathElement = document.getElementById('current-path');
+// script.js
+const directoryList = document.getElementById('directory-list');
 
-let currentDirectory = '/';
+function displayDirectoryContents(directoryPath) {
+    // Simulating directory contents (replace with actual file system access)
+    const directoryContents = [
+        { name: "Folder 1", type: "folder" },
+        { name: "File 1.txt", type: "file" },
+        { name: "Folder 2", type: "folder" },
+        { name: "File 2.pdf", type: "file" }
+    ];
 
-// Simulated file system data
-const fileSystem = {
-    '/': ['documents', 'images', 'videos'],
-    '/documents': ['/misc', 'presentation.pptx'],
-    '/images': ['photo.jpg', 'screenshot.png'],
-    '/videos': ['tutorial.mp4']
-};
-
-function renderFileSystem() {
-    const currentDirContent = fileSystem[currentDirectory] || [];
-    fileListElement.innerHTML = '';
-    currentPathElement.textContent = `Current Path: ${currentDirectory}`;
-
-    currentDirContent.forEach(item => {
-        const itemElement = document.createElement('div');
-        itemElement.className = 'file-item';
+    directoryList.innerHTML = '';
+    
+    directoryContents.forEach(item => {
+        const listItem = document.createElement('li');
+        listItem.className = `directory-item ${item.type}`;
         
-        if (item.includes('.')) {
-            itemElement.className += ' file';
-            itemElement.textContent = item;
-        } else {
-            itemElement.className += ' folder';
-            itemElement.textContent = item;
-            itemElement.addEventListener('click', () => {
-                currentDirectory += item + '/';
-                renderFileSystem();
+        const itemName = document.createTextNode(item.name);
+        listItem.appendChild(itemName);
+
+        // Add click event listener for folders
+        if (item.type === 'folder') {
+            listItem.addEventListener('click', () => {
+                // Implement folder navigation logic here
+                console.log(`Navigating to ${item.name}`);
             });
         }
 
-        fileListElement.appendChild(itemElement);
+        directoryList.appendChild(listItem);
     });
 }
 
-renderFileSystem();
-
-// Handle back button
-document.addEventListener('keydown', event => {
-    if (event.key === 'Backspace' && currentDirectory !== '/') {
-        currentDirectory = currentDirectory.substring(0, currentDirectory.lastIndexOf('/'));
-        renderFileSystem();
-    }
-});
+// Initial display of root directory
+displayDirectoryContents('/');
